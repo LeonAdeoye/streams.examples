@@ -3,6 +3,7 @@ package com.leon.ks;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
+import org.apache.kafka.streams.kstream.KStream;
 
 import java.util.Properties;
 
@@ -23,5 +24,7 @@ public class Pipe
         props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
 
         final StreamsBuilder builder = new StreamsBuilder();
+
+        KStream<String, String> source = builder.stream("streams-plaintext-input");
     }
 }
