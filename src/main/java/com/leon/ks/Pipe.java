@@ -3,6 +3,7 @@ package com.leon.ks;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
+import org.apache.kafka.streams.Topology;
 import org.apache.kafka.streams.kstream.KStream;
 
 import java.util.Properties;
@@ -23,8 +24,18 @@ public class Pipe
         props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
         props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
 
+        // Processing logic is defined as a topology of connected processor nodes. We can use a topology builder to construct such a topology
         final StreamsBuilder builder = new StreamsBuilder();
 
+        // create a source stream from a Kafka topic named streams-plaintext-input using this topology builder
         KStream<String, String> source = builder.stream("streams-plaintext-input");
+        // Now we have a KStream that is continuously generating records from its source Kafka topic streams-plaintext-input.
+        // The records are organized as String-typed key-value pairs. The simplest thing we can do with this stream is to write it into another Kafka topic.
+        source.to("streams-pipe-output");
+
+        // We can inspect what kind of topology is created from this builder by doing the following:
+        final Topology topology = builder.build();
+        // And print its description to standard output as:
+        System.out.println(topology.describe());
     }
 }
