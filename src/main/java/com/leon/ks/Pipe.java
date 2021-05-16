@@ -41,6 +41,7 @@ public class Pipe
         System.out.println(topology.describe());
 
         final KafkaStreams streams = new KafkaStreams(topology, props);
+        // The countdown latch is used to make the main thread wait for the exit until Ctrl-C has been input via the shutdown hook.
         final CountDownLatch latch = new CountDownLatch(1);
 
         // attach shutdown handler to catch control-c
